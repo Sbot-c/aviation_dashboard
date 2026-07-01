@@ -21,7 +21,7 @@ def load_data():
         return pd.DataFrame()
     
     df = pd.read_csv(csv_path)
-    df['Departure_DateTime'] = pd.to_datetime(df['Departure_DateTime'])
+    df['Departure_DateTime'] = pd.to_datetime(df['Departure_DateTime'], errors='coerce')
     df['Route'] = df['Origin'] + " ➔ " + df['Destination']
     # Calculate Load Factor
     df['Load_Factor_%'] = (df['Passenger_Count'] / df['Max_Capacity'] * 100).round(1)
