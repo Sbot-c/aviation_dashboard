@@ -175,21 +175,21 @@ if not df_raw.empty:
             ))
             
             # 4. Apply layouts safely
+      # 4. Apply layouts safely using modern Plotly parameters
             fig_trend.update_layout(
                 title="Weekly Passenger Volume and Revenue Trends Over Time",
-                xaxis=dict(title="Timeline"),
+                xaxis=dict(title=dict(text="Timeline")),
                 yaxis=dict(
-                    title="Passenger Volume", 
-                    titlefont=dict(color='RoyalBlue'), 
-                    tickfont=dict(color='RoyalBlue')
+                    title=dict(text="Passenger Volume", font=dict(color='RoyalBlue')), 
+                    tickfont=dict(color='RoyalBlue') # tickfont is still fine or use tick_font depending on strictness
                 ),
                 legend=dict(x=0.01, y=0.99)
             )
             
+            # Update the secondary Y-Axis with modern text/font schemas
             fig_trend.update_layout(
                 yaxis2=dict(
-                    title="Revenue ($)", 
-                    titlefont=dict(color='ForestGreen'), 
+                    title=dict(text="Revenue ($)", font=dict(color='ForestGreen')), 
                     tickfont=dict(color='ForestGreen'), 
                     overlaying='y', 
                     side='right'
