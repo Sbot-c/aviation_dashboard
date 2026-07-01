@@ -144,44 +144,62 @@ if not df_raw.empty:
             st.plotly_chart(fig_co2, use_container_width=True)
 
     # --- Tab 4: Time-Series Trends ---
+    # --- Tab 4: Time-Series Trends ---
     with tab4:
         st.subheader("Chronological Traffic & Operational Trajectory")
         
-        # Resample data by week
-        df_time = df.set_index('Departure_DateTime').resample('W')[['Passenger_Count', 'Total_Revenue_USD']].sum().reset_index()
+        # 1. Drop rows where Departure_DateTime is NaT/Null to prevent resampling crashes
+        df_clean_time = df.dropna(subset=['Departure_DateTime'])
         
-        fig_trend = go.Figure()
-        fig_trend.add_trace(go.Scatter(x=df_time['Departure_DateTime'], y=df_time['Passenger_Count'],
-                                      mode='lines+markers', name='Weekly Passengers', yaxis='y1', line=dict(color='RoyalBlue')))
-        fig_trend.add_trace(go.Scatter(x=df_time['Departure_DateTime'], y=df_time['Total_Revenue_USD'],
-                                      mode='lines+markers', name='Weekly Revenue ($)', yaxis='y2', line=dict(color='ForestGreen')))
-        
-        # Create dual axis layout
-        # Create dual axis layout cleanly
-        fig_trend.update_layout(
-            title="Weekly Passenger Volume and Revenue Trends Over Time",
-            xaxis=dict(title="Timeline"),
-            yaxis=dict(
-                title="Passenger Volume", 
-                titlefont=dict(color='RoyalBlue'), 
-                tickfont=dict(color='RoyalBlue')
-            ),
-            # Use dictionary style update to safely inject yaxis2 without keyword conflicts
-            legend=dict(x=0.01, y=0.99)
-        )
-        
-        # Explicitly update the second axis to bypass strict keyword check errors
-        fig_trend.update_layout(
-            yaxis2=dict(
-                title="Revenue ($)", 
-                titlefont=dict(color='ForestGreen'), 
-                tickfont=dict(color='ForestGreen'), 
-                overlaying='y', 
-                side='right'
+        if not df_clean_time.empty:
+            # 2. Set index and resample safely
+            df_time = df_clean_time.set_index('Departure_DateTime').resample('W')[['Passenger_Count', 'Total_Revenue_USD']].sum().reset_index()
+            
+            # 3. Build the figure
+            fig_trend = go.Figure()
+            fig_trend.add_trace(go.Scatter(
+                x=df_time['Departure_DateTime'], 
+                y=df_time['Passenger_Count'],
+                mode='lines+markers', 
+                name='Weekly Passengers', 
+                line=dict(color='RoyalBlue')
+            ))
+            
+            fig_trend.add_trace(go.Scatter(
+                x=df_time['Departure_DateTime'], 
+                y=df_time['Total_Revenue_USD'],
+                mode='lines+markers', 
+                name='Weekly Revenue ($)', 
+                yaxis='y2', 
+                line=dict(color='ForestGreen')
+            ))
+            
+            # 4. Apply layouts safely
+            fig_trend.update_layout(
+                title="Weekly Passenger Volume and Revenue Trends Over Time",
+                xaxis=dict(title="Timeline"),
+                yaxis=dict(
+                    title="Passenger Volume", 
+                    titlefont=dict(color='RoyalBlue'), 
+                    tickfont=dict(color='RoyalBlue')
+                ),
+                legend=dict(x=0.01, y=0.99)
             )
-        )
-        st.plotly_chart(fig_trend, use_container_width=True)
-
+            
+            fig_trend.update_layout(
+                yaxis2=dict(
+                    title="Revenue ($)", 
+                    titlefont=dict(color='ForestGreen'), 
+                    tickfont=dict(color='ForestGreen'), 
+                    overlaying='y', 
+                    side='right'
+                )
+            )
+            
+            # 5. Render chart
+            st.plotly_chart(fig_trend, use_container_width=True)
+        else:
+            st.warning("No valid date records available to display trends.")
     # --- Tab 5: Customer Satisfaction ---
     with tab5:
         st.subheader("Service Quality & Sentiment Correlates")
