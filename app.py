@@ -16,29 +16,47 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Global Background and Sidebar adjustments */
+    /* 1. Eliminate the top white padding strip completely */
+    [data-testid="stHeader"] {
+        background-color: rgba(0,0,0,0) !important;
+        height: 0px !important;
+    }
+    .main .block-container {
+        padding-top: 2rem !important; /* Adjust header distance tightly */
+        background-color: #0B0C10 !important;
+    }
+
+    /* 2. Global Background Override */
     .stApp {
         background-color: #0B0C10 !important;
         color: #F5F5F7 !important;
     }
-    div[data-testid="stSidebar"] {
-        background-color: #111318 !important;
-    }
     
-    /* Recolor the selected pill tags in the sidebar to Emirates Red */
+    /* 3. Force Sidebar Background and Input Contexts to Absolute Dark */
+    section[data-testid="stSidebar"] {
+        background-color: #000000 !important;
+    }
+    section[data-testid="stSidebar"] div[role="common_links_container"] {
+        background-color: #000000 !important;
+    }
+    /* Targets the inner sidebar wrappers */
+    div[data-testid="stSidebarUserContent"] {
+        background-color: #000000 !important;
+    }
+
+    /* 4. Filter Component Styling (Emirates Crimson) */
     div[data-testid="stSidebar"] span[data-baseweb="tag"] {
         background-color: #D71921 !important;
         color: #FFFFFF !important;
         font-weight: 500;
         border-radius: 4px;
     }
-    
-    /* Border accent focus color for dropdown menus */
     div[data-testid="stSidebar"] div[data-baseweb="select"] {
         border-color: #D71921 !important;
+        background-color: #111318 !important; /* Input box fill */
     }
     
-    /* Style tabs to look slick in dark mode */
+    /* 5. Navigation Tabs adjustments */
     button[data-baseweb="tab"] {
         color: #A0A5B5 !important;
         font-size: 16px !important;
@@ -49,7 +67,6 @@ st.markdown(
         border-bottom-color: #D71921 !important;
     }
     
-    /* Horizontal rules */
     hr {
         border-color: #222630 !important;
     }
@@ -57,7 +74,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
 # --- Load Data Function ---
 @st.cache_data
 def load_data():
