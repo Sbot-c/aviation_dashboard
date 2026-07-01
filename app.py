@@ -157,12 +157,28 @@ if not df_raw.empty:
                                       mode='lines+markers', name='Weekly Revenue ($)', yaxis='y2', line=dict(color='ForestGreen')))
         
         # Create dual axis layout
+        # Create dual axis layout cleanly
         fig_trend.update_layout(
             title="Weekly Passenger Volume and Revenue Trends Over Time",
             xaxis=dict(title="Timeline"),
-            yaxis=dict(title="Passenger Volume", titlefont=dict(color='RoyalBlue'), tickfont=dict(color='RoyalBlue')),
-            yaxis2=dict(title="Revenue ($)", titlefont=dict(color='ForestGreen'), tickfont=dict(color='ForestGreen'), overlaying='y', side='right'),
+            yaxis=dict(
+                title="Passenger Volume", 
+                titlefont=dict(color='RoyalBlue'), 
+                tickfont=dict(color='RoyalBlue')
+            ),
+            # Use dictionary style update to safely inject yaxis2 without keyword conflicts
             legend=dict(x=0.01, y=0.99)
+        )
+        
+        # Explicitly update the second axis to bypass strict keyword check errors
+        fig_trend.update_layout(
+            yaxis2=dict(
+                title="Revenue ($)", 
+                titlefont=dict(color='ForestGreen'), 
+                tickfont=dict(color='ForestGreen'), 
+                overlaying='y', 
+                side='right'
+            )
         )
         st.plotly_chart(fig_trend, use_container_width=True)
 
