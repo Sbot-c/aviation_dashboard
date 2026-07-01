@@ -12,6 +12,26 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# Custom Emirates CSS styling for sidebar selection elements
+st.markdown(
+    """
+    <style>
+    /* Recolor the selected pill tags in the sidebar to Emirates Red */
+    div[data-testid="stSidebar"] span[data-baseweb="tag"] {
+        background-color: #D71921 !important;
+        color: #FFFFFF !important;
+        font-weight: 500;
+    }
+    
+    /* Subtle border accent focus color for dropdown menus */
+    div[data-testid="stSidebar"] div[data-baseweb="select"] {
+        border-color: #D71921 !important;
+    }
+    </style>
+    """,
+    unsafe_html=True
+)
+
 # --- Load Data Function ---
 @st.cache_data
 def load_data():
